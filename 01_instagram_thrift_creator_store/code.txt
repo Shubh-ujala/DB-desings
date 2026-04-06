@@ -1,0 +1,94 @@
+//customer details, order history, payment status and shipping status.
+
+customer [icon: user, color:red] {
+  id string pk
+  name varchar(50)
+  phone varchar(100)
+  createdAt date
+  updatedAt date
+}
+Order [icon: cube]{
+  id string pk
+  order_medium ENUM('Instagram','whatsApp')
+  cart_id string fk
+  cutomer_id string fk
+  payment_id string fk
+  address_id string fk
+}
+orderItemsCart[icon:list]{
+  id string pk
+  qunatity number
+  order_id string fk
+  product_id string fk
+}
+payment [icon:rupee]{
+  id string pk
+  order_id string fk
+  payment_amount number
+  payment_status ENUM('pending','done','failed')
+  payment_method ENUM('online','COD','card')
+  payment_date date
+}
+
+address [icon: azure-location]{
+  id string pk
+  pincode number
+  city varchar(20)
+  state varchar(50)
+  country varchar(50)
+  street_address text
+  customer_id string fk
+}
+shipping [icon:bus, color:yellow]{
+  id string pk
+  order_id string fk
+  shipping_status ENUM('dispatched','In_transit','out_for_delievery','delievered')
+  tracking_Number number
+  dispatched_at date
+  delievered_at date
+  address_id string fk
+}
+
+
+
+
+products [icon: store]{
+  id string pk
+  product_type ENUM('thrift','handmade')
+  product_condition ENUM('excellent','good','compromised')
+  color varchar(50)
+  size ENUM('small','medium','large','XL')
+  stock number
+  price number
+}
+
+handmadeProduct [icon:shirt]{
+  id string pk
+  product_id string fk
+  material_used varchar(50)
+}
+thriftedProduct [icon:shopping-cart]{
+  id string pk
+  product_id string fk
+  purchase_source string
+}
+
+
+shipping.address_id - address.id // one shipping can have one address
+Order.id - shipping.address_id // one order can have one address
+
+customer.id < Order.cutomer_id // one user can have multiple orders
+
+customer.id < address.customer_id // one user can have multiple addresses
+
+Order.address_id - address.id // one order can have one address to deliever
+// Order.payment_id - payment.id 
+Order.payment_id - payment.id 
+// one order can have one way of payment
+
+products.id - handmadeProduct.product_id
+products.id - thriftedProduct.product_id
+
+Order.id < orderItemsCart.order_id
+orderItemsCart.product_id < products.id
+
