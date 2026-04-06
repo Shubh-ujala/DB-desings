@@ -1,6 +1,6 @@
 # DB-desings
 
-For the given table you can access the DB designs
+From the given table you can access the DB designs
 
 | DB design                               | exported_img Link |
 |---------------------------------------- |-------------------|
