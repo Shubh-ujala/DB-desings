@@ -1,0 +1,95 @@
+// user , trainer
+
+user_profile[icon : user]{
+  id string pk
+  name varchar(50)
+  email varchar(50)
+  role ENUM('user','trainer')
+  createdAt timestamp
+  updatedAt timestamp
+}
+user_details[icon: user-edit]{
+  id string pk
+  user_id string fk
+  age number
+  height number
+  gender ENUM('Male','Female','Other')
+  fitness_goal text
+  body_weight number
+}
+
+trainer_details[icon:user-plus , color:green]{
+  id string pk
+  trainer_id string fk
+  specialization varchar(50)
+  bio varchar(100)
+  experience_years number
+  rating varchar(10)
+}
+
+plans[icon:list]{
+  id string pk
+  trainer_id string fk
+  plan_title string
+  plan_description string
+  plan_duration varchar(20)
+  plan_price varchar(20)
+  plan_type ENUM('consultation','coaching','live session')
+  createdAt timestamp
+  updatedAt timestamp
+}
+subsctiptions[icon:check-circle,color:pink]{
+  id string pk
+  user_id string fk
+  plan_id string fk
+  start date
+  end date
+  status ENUM('active','expires','cancelled')
+}
+
+sessions[icon:stamp]{
+  id string pk
+  trainer_id string fk
+  user_id string fk
+  subscription_id string fk
+  session_type ENUM('consultation','live','coaching')
+  scheduled_at date
+  session_duration timestamp
+  meeting_link string
+  createdAt timestamp
+  updatedAt timestamp
+}
+ payments[icon:dollar-sign]{
+  id string pk
+  user_id string fk
+  subscription_id string fk 
+  amount varchar(50)
+  payment_method ENUM('Cash','Online')
+  status ENUM('failed','success','pending')
+  transaction_date date
+
+ }
+
+
+subsctiptions.id < sessions.id
+user_profile.id - trainer_details.trainer_id
+user_profile.id - user_details.user_id
+
+
+
+subsctiptions.user_id > user_profile.id // one user can have multiple subscriptions
+plans.id < subsctiptions.plan_id // one plan can have multiple subscriptions
+
+trainer_details.id < plans.trainer_id// one trainer can offer multiple plans
+plans.id < user_details.id // one plan can have multiple user(clients)
+
+trainer_details.id < sessions.trainer_id
+user_details.id <sessions.user_id
+
+subsctiptions.id < payments.subscription_id
+
+
+
+
+
+
