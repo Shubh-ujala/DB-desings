@@ -1,0 +1,120 @@
+//doctors, patients, appointments, consultations, diagnostic tests, reports, and payments.
+
+
+user[icon:user, color:green]{
+  id string pk
+  name string
+  email varchar(50)
+  password varchar(100)
+  avatar_img varchar(50)
+  role ENUM('patient','doctor')
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+doctor[icon:doctor]{
+  id string pk
+  user_id string fk
+  clinic_id string fk
+  specialization string
+  expreriance_years number
+  bio text
+  is_available boolean
+  available_days string
+  available_timeslots timestamp
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+patient[icon:user]{
+  id string pk
+  user_id string fk
+  full_name varchar(100)
+  father's_name varchar(100)
+  blood_group string
+  phone_Number number
+  alternate_phone_Number number
+  issues text
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+Clinc[icon:hospital, color:pink]{
+  id string pk
+  clinc_name string
+  clinic_location string
+  clinic_timings timestamp
+  is_open boolean
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+Appointment[icon:timer]{
+  id string pk
+  doctor_id string fk
+  patient_id string fk 
+  clinic_id string fk
+  number_patients number
+  max_patients number
+  appointment_date date
+  consultation_fees number
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+consultation[icon:users]{
+  id string pk
+  doctor_id string fk
+  patient_id string fk
+  appointment_id string fk
+  diagnosis text
+  prescription text
+  precautions optional 
+  createdAt timestamp
+  updatedAt timestamp
+}
+diagnostic_test[icon:test-tube]{
+  id string pk
+  consultation_id string fk
+  test_name string
+  test_price number
+  createdAt timestamp
+  updatedAt timestamp
+}
+test_report[icon:file]{
+  id string pk
+  diagnostic_test_id string fk
+  patient_id string fk
+  test_report_result text
+  test_report_summary text
+  report_file string
+  report_generation_date date
+  createdAt timestamp
+  updatedAt timestamp
+}
+payment[icon:dollar-sign]{
+  id string pk
+  appointment_id string fk
+  amount number
+  payment_method ENUM('Cash','Online','EMI')
+  payment_status ENUM('pending','success','failed')
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+user.id > doctor.user_id 
+user.id > patient.user_id
+doctor.id < Appointment.doctor_id // one doctor can have multiple appointments
+patient.id <Appointment.patient_id // one patient can also have many appointments
+Appointment.clinic_id - Clinc.id // one appointment can only be occur in one clinic
+payment.appointment_id - Appointment.id
+
+consultation.appointment_id - Appointment.id // one consultation can have one appointment
+diagnostic_test.consultation_id > consultation.id // one consultation can have many tests
+test_report.diagnostic_test_id - diagnostic_test.id
+
+
+
+
+
+
