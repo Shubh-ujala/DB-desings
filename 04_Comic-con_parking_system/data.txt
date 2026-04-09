@@ -1,0 +1,79 @@
+//vehicles
+
+vehicle[icon:car]{
+  id string pk
+  vehicle_number number
+  vehicle_owner string
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+vehicle_category[icon:list]{
+  id string pk
+  vehicle_id string fk
+  category ENUM('car','bike','EV','cab')
+}
+parking_category[icon:list]{
+  id string pk
+  category ENUM('VVIP','VIP','staff','EV charging')
+}
+parking_zone[icon:parking]{
+  id string pk
+  name ENUM('BlockA','BlockB','BlockC','basement')
+}
+
+parking_spot[icon:parking]{
+  id string pk
+  parking_zone_id string fk
+  parking_category_id string fk
+  spot_number number
+  is_available boolean
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+parking_ticket[icon:ticket]{
+  id string pk
+  ticket_number number unique
+  createdAt timestamp
+  updatedAt timestamp
+}
+spot_reservation[icon:bullseye]{
+  id string pk
+  spot_id string fk
+  parking_category_id string fk
+  createdAt timestamp
+}
+parking_Session[icon:timer]{
+  id string pk 
+  vehicle_id string fk
+  spot_id string fk
+  ticket_id string fk
+  parking_category_id string fk
+  entry_time timestamp
+  exit_time timestamp
+  status ENUM('active','completed')
+}
+
+
+payment[icon:rupee]{
+  id string pk
+  parking_Session_id string fk
+  amount number
+  payment_time timestamp
+  payment_status ENUM('done','failed','pending')
+  payment_method ENUM('cash','online')
+}
+
+vehicle_category.vehicle_id > vehicle.spot_id
+parking_spot.parking_zone_id > parking_zone.id
+
+parking_spot.parking_category_id> parking_category.id
+spot_reservation.spot_id > parking_spot.id
+spot_reservation.parking_category_id > parking_category.id 
+
+parking_Session.vehicle_id > vehicle.id               
+parking_Session.spot_id > parking_spot.id             
+parking_Session.ticket_id - parking_ticket.id         
+parking_Session.parking_category_id > parking_category.id 
+payment.parking_session_id - parking_Session.id      
