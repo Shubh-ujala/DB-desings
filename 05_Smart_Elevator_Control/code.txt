@@ -1,0 +1,98 @@
+
+
+
+building[icon:building]{
+  id string pk
+  location string
+  building_name string
+  floors number
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+building_floor[icon:gate]{
+  id string pk
+  floor_number number
+  building_id string fk
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+elevator[icon:elevenlabs]{
+  id string pk
+  capacity number
+  createdAt timestamp
+  building_id string fk
+  elevator_installed timestamp
+  elevator_servicing timestamp
+  updatedAt timestamp
+}
+
+ride_assignment[icon:user]{
+  id string pk
+  request_id string fk
+  elevator_id string fk
+  assignedAt timestamp
+  createdAt timestamp
+  updatedAt timestamp
+}
+floor_request[icon:receipt]{
+  id string pk
+  floor_id string fk
+  building_id string fk
+  request_time timestamp
+  direction ENUM('up','down')
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+ride_logs[icon:log]{
+  id string pk
+  request_id string fk
+  elevator_id string fk
+  floor_id string fk
+  startedAt timestamp
+  endAt timestamp
+}
+
+elevator_status[icon:ionic]{
+  id string pk
+  elevator_id string fk
+  building_floor_id string fk
+  moving_directioon ENUM('up','down','idle')
+  need_reparing boolean
+  status ENUM('idle','moving','stopped')
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+
+maintainance_record[icon:azure-maintenance-configuration]{
+  id string pk
+  elevator_id string fk
+  issue_details text
+  status ENUM('open','in_progress','resolved')
+  startedAt timestamp
+  resolvedAt timestamp
+  createdAt timestamp
+  updatedAt timestamp
+}
+
+building.id <building_floor.building_id
+building.id <elevator.building_id
+building_floor.id <floor_request.floor_id
+building.id <floor_request.building_id
+
+floor_request.building_id - ride_assignment.request_id
+elevator.id < ride_assignment.elevator_id
+floor_request.id - ride_logs.request_id
+
+elevator.id  < ride_logs.elevator_id
+
+building.floor_id < ride_logs.floor_id
+elevator.id < elevator_status.elevator_id
+building_floor.id < elevator_status.building_floor_id
+
+elevator.id < maintainance_record.elevator_id
+
+
